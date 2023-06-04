@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const productsSchema = new mongoose.Schema({
-    productName: {
+    productTitle: {
         type: String,
         required: ["true", "please provide a product name"],
         trim: true,
@@ -27,13 +27,13 @@ const productsSchema = new mongoose.Schema({
         type: String
     },
 
-    productPhotos: [
+    productImages: [
         {
-            public_id: {
+            publicID: {
                 type: String,
                 required: true
             },
-            secure_url: {
+            secureURL: {
                 type: String,
                 required: true
             }
@@ -42,12 +42,12 @@ const productsSchema = new mongoose.Schema({
 
     stock: {
         type: Number,
-        default: 0
+        required: true,
     },
 
     sold: {
         type: Number,
-        default: 0
+        required: true,
     },
     
     collectionID: {

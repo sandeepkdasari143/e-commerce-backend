@@ -12,17 +12,16 @@ export const createCollection = BigPromise(async (req, res, next) => {
     if (!collectionDescription) throw new CustomError("Collection Description must be provided", 400);
 
     const collectionID = new Mongoose.Types.ObjectId().toHexString();
-    if (!collectionID) throw new CustomError("Internal Server Error in Collections Controller", 500);
+    if (!collectionID) throw new CustomError("Internal Server Error in Collections Controller", 400);
 
     let cloudinaryResult; //block scope variable, so declared outside of If condition...
-    
     if (req.files) {
         let collectionLogo = req.files.collectionLogo;
         cloudinaryResult = await cloudinary.v2.uploader.upload(collectionLogo.tempFilePath, {
-            folder:`${collectionName}_${collectionID}`
+            folder:`${collectionID}`
         });
     }
-
+    console.log(cloudinaryResult)
     const newCollection = await Collection.create({
         _id: collectionID,
         collectionName,
