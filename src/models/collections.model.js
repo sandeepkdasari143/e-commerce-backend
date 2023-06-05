@@ -11,7 +11,7 @@ const collectionsSchema = new mongoose.Schema({
         type: String,
         required: ["true", "Please provide a collection name"],
         trim: true,
-        maxLength: [100, "Collection description should not be under 100 chars"]
+        maxLength: [500, "Collection description should not be under 500 chars"]
     },
     products: [{
             type: mongoose.Schema.Types.ObjectId,
