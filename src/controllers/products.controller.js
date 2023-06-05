@@ -7,7 +7,7 @@ import cloudinary from "cloudinary";
 export const createProduct = BigPromise(async(req, res, next) => {
     const { productTitle, productDescription, stock, collectionID, minimumRetailPrice, discountPercentage } = req.body;
     
-    // if (!(productTitle && productDescription && stock && collectionID && minimumRetailPrice && discountPercentage)) throw new CustomError("All the fields are required!", 400);
+    if (!(productTitle && productDescription && stock && collectionID && minimumRetailPrice && discountPercentage)) throw new CustomError("All the fields are required!", 400);
 
     
     const productID = new Mongoose.Types.ObjectId().toHexString();
@@ -63,12 +63,26 @@ export const createProduct = BigPromise(async(req, res, next) => {
 export const getAllProducts = BigPromise(async (req, res, next) => {
     const products = await Product.find();
     if (!products) throw new CustomError("Unfortunately! Products aren't fetched properly :(", 400);
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
     res.status(200).json({
         success: true,
         message: "Products fetched successfully :)",
         products
     })
 })
+
+export const getProductsByCollectionID = BigPromise(async (req, res, next) => {
+    const collectionID = req.params.collectionID;
+    if (!collectionID) throw new CustomError("collectionID is required in request params :(", 400);
+    const products = await Product.find({ collectionID });
+    if (!products) throw new CustomError("We are unable to find products with given collectionID", 400);
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
+    res.status(200).json({
+        success: true,
+        message: "Products fetched successfully :)",
+        products
+    })
+});
 
 export const updateProduct = BigPromise(async(req, res, next) => {
     const { productName, productDescription, stock, collectionID, minimumRetailPrice, discountPercentage } = req.body;
@@ -108,38 +122,10 @@ export const updateProduct = BigPromise(async(req, res, next) => {
 })
 
 export const deleteProduct = BigPromise(async(req, res, next) => {
-    const { productName, productDescription, stock, collectionID, minimumRetailPrice, discountPercentage } = req.body;
     
-    if (!(productName && productDescription && stock && collectionID && minimumRetailPrice && discountPercentage)) throw new CustomError("All the fields are required!", 400);
-
-    if (req.files) {
-        
-    }
-
-    let productPrice;
-
-    if (Math.sign(discountPercentage) === -1) {
-        throw new CustomError("Discount percentage must be positive.", 400)
-    }
-    if (Math.sign(discountPercentage) === 1) {
-        let discount = minimumRetailPrice * (discountPercentage / 100);
-        productPrice = minimumRetailPrice - discount;
-    }
-    
-    const newProduct = await Product.create({
-        productName,
-        productDescription,
-        stock,
-        collectionID,
-        minimumRetailPrice,
-        discountPercentage,
-        productPrice
-    });
-
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
     res.status(200).json({
         success: true,
-        message: `${productName} is successfully added :)`,
-        newProduct
+        message: ` is successfully added :)`
     });
 })
