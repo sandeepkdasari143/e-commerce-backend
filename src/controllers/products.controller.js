@@ -74,7 +74,7 @@ export const updateProduct = BigPromise(async (req, res, next) => {
     let productImages = [];
 
     if (req.files) {
-        //Destroy the Existing Banner Image in the Cloudinary
+        //Destroy the Existing Product Images in the Cloudinary
         productToUpdate?.productImages?.map(async (image) => await cloudinary.v2.uploader.destroy(image?.publicID));
         
         let Images = req.files;
